@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Authentication | Lumière</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/style.css">
+  <style>
+    /* Scoped Auth Styles */
+    body { overflow: hidden; }
+    .auth-container {
+      display: flex;
+      height: 100vh;
+      width: 100vw;
+    }
+    .auth-image {
+      flex: 1;
+      position: relative;
+      background: url('/images/hero_fashion_1776297697230.png') center/cover no-repeat;
+      display: flex;
+      align-items: flex-end;
+      padding: 4rem;
+    }
+    .auth-image::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+    }
+    .auth-quote {
+      position: relative;
+      z-index: 1;
+      color: white;
+    }
+    .auth-quote h2 { font-size: 3rem; font-weight: 300; margin-bottom: 1rem; }
+    .auth-form-area {
+      flex: 1;
+      background: var(--bg-color);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 10%;
+      position: relative;
+    }
+    .back-home {
+      position: absolute;
+      top: 2rem;
+      right: 2rem;
+      text-decoration: none;
+      color: var(--text-main);
+      font-weight: 600;
+      opacity: 0.7;
+      transition: var(--transition);
+    }
+    .back-home:hover { opacity: 1; }
+    
+    .form-wrapper {
+      max-width: 400px;
+      width: 100%;
+      margin: 0 auto;
+    }
+    .form-header { margin-bottom: 2.5rem; }
+    .form-header h1 { font-size: 2.5rem; margin-bottom: 0.5rem; color: var(--text-main); }
+    .form-header p { color: var(--text-muted); }
+    
+    .input-group {
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+    .input-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--text-main);
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+    .input-group input {
+      width: 100%;
+      padding: 1rem 1.2rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      border-radius: 8px;
+      outline: none;
+      transition: var(--transition);
+      font-size: 1rem;
+    }
+    .input-group input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(229, 169, 60, 0.1);
+    }
+    .auth-btn {
+      width: 100%;
+      padding: 1rem;
+      background: var(--text-main);
+      color: var(--bg-color);
+      border: none;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 1rem;
+      transition: var(--transition);
+    }
+    .auth-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+    
+    .form-toggle {
+      margin-top: 2rem;
+      text-align: center;
+      color: var(--text-muted);
+    }
+    .form-toggle a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    
+    /* Toggle animations */
+    .view-section { display: none; animation: slideIn 0.4s ease forwards; }
+    .view-section.active { display: block; }
+    
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    @media (max-width: 768px) {
+      .auth-image { display: none; }
+      .auth-form-area { padding: 5%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="auth-container">
+    <div class="auth-image">
+      <div class="auth-quote">
+        <h2>"Elegance is an attitude."</h2>
+        <p>— Join our exclusive community.</p>
+      </div>
+    </div>
+    <div class="auth-form-area">
+      <a href="/" class="back-home">&larr; Back to Store</a>
+      <div class="form-wrapper">
+        
+        <!-- Login Form -->
+        <div id="login-view" class="view-section active">
+          <div class="form-header">
+            <h1>Welcome Back</h1>
+            <p>Enter your details to access your account.</p>
+          </div>
+          <form onsubmit="event.preventDefault(); window.location.href='/'">
+            <div class="input-group">
+              <label>Email Address</label>
+              <input type="email" placeholder="hello@example.com" required>
+            </div>
+            <div class="input-group">
+              <label>Password</label>
+              <input type="password" placeholder="••••••••" required>
+            </div>
+            <button type="submit" class="auth-btn">Sign In</button>
+          </form>
+          <div class="form-toggle">
+            Don't have an account? <a id="go-to-signup">Sign up</a>
+          </div>
+        </div>
+
+        <!-- Signup Form -->
+        <div id="signup-view" class="view-section">
+          <div class="form-header">
+            <h1>Create Account</h1>
+            <p>Join Lumière for exclusive drops.</p>
+          </div>
+          <form onsubmit="event.preventDefault(); window.location.href='/'">
+            <div class="input-group">
+              <label>Full Name</label>
+              <input type="text" placeholder="Jane Doe" required>
+            </div>
+            <div class="input-group">
+              <label>Email Address</label>
+              <input type="email" placeholder="hello@example.com" required>
+            </div>
+            <div class="input-group">
+              <label>Password</label>
+              <input type="password" placeholder="••••••••" required>
+            </div>
+            <button type="submit" class="auth-btn">Create Account</button>
+          </form>
+          <div class="form-toggle">
+            Already have an account? <a id="go-to-login">Sign in</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <script src="/src/login.js"></script>
+</body>
+</html>
