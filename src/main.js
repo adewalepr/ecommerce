@@ -5,7 +5,13 @@ const products = [
   { id: 3, title: 'Modern Urban Sneaker', category: 'shoes', price: 185.00, image: '/images/product_shoe_1776297754532.png' },
   { id: 4, title: 'Classic Trench Coat', category: 'clothes', price: 320.00, image: '/images/product_clothes_1776297862770.png' },
   { id: 5, title: 'Mini Crossbody Bag', category: 'bags', price: 450.00, image: '/images/product_bag_1776297734162.png' },
-  { id: 6, title: 'High-Top Runner', category: 'shoes', price: 210.00, image: '/images/product_shoe_1776297754532.png' }
+  { id: 6, title: 'High-Top Runner', category: 'shoes', price: 210.00, image: '/images/product_shoe_1776297754532.png' },
+  { id: 7, title: 'Cashmere Blend Scarf', category: 'clothes', price: 120.00, image: '/images/product_clothes_1776297862770.png' },
+  { id: 8, title: 'Oversized Tote Bag', category: 'bags', price: 560.00, image: '/images/product_bag_1776297734162.png' },
+  { id: 9, title: 'Slip-On Loafers', category: 'shoes', price: 250.00, image: '/images/product_shoe_1776297754532.png' },
+  { id: 10, title: 'Merino Wool Sweater', category: 'clothes', price: 180.00, image: '/images/product_clothes_1776297862770.png' },
+  { id: 11, title: 'Structured Satchel', category: 'bags', price: 720.00, image: '/images/product_bag_1776297734162.png' },
+  { id: 12, title: 'Classic Leather Boots', category: 'shoes', price: 310.00, image: '/images/product_shoe_1776297754532.png' }
 ];
 
 let cart = [];
@@ -41,7 +47,12 @@ if(heroBg) heroBg.style.backgroundImage = `url('/images/hero_fashion_17762976972
 // Initialization
 function init() {
   initTheme();
-  renderProducts('all');
+  if (document.getElementById('products-grid')) {
+    renderProducts('all');
+  }
+  if (document.getElementById('carousel-track')) {
+    renderCarousel();
+  }
   setupEventListeners();
   loadCart();
   initIntersectionObserver();
@@ -66,13 +77,14 @@ function initIntersectionObserver() {
 }
 
 function renderProducts(filterCategory) {
+  if (!productsGrid) return;
   productsGrid.innerHTML = '';
   const filteredProducts = filterCategory === 'all' ? products : products.filter(p => p.category === filterCategory);
 
   filteredProducts.forEach((product, i) => {
     const card = document.createElement('div');
     card.classList.add('product-card', 'reveal');
-    card.style.animationDelay = `${i * 0.1}s`;
+    card.style.animationDelay = `${i * 0.05}s`;
     card.innerHTML = `
       <div class="product-img-wrapper">
         <img src="${product.image}" alt="${product.title}" class="product-img">
@@ -85,16 +97,69 @@ function renderProducts(filterCategory) {
       </div>
     `;
     productsGrid.appendChild(card);
-    // Observe for reveal
-    setTimeout(() => card.classList.add('active'), 50); // fast trigger for dynamic inject
+    setTimeout(() => card.classList.add('active'), 50);
   });
 
+  attachAddToCartListeners();
+}
+
+function renderCarousel() {
+  const track = document.getElementById('carousel-track');
+  if (!track) return;
+  track.innerHTML = '';
+  
+  // Show first 6 products as featured
+  const featured = products.slice(0, 8);
+  
+  featured.forEach((product, i) => {
+    const card = document.createElement('div');
+    card.classList.add('carousel-card');
+    card.innerHTML = `
+      <div class="product-img-wrapper">
+        <img src="${product.image}" alt="${product.title}" class="product-img">
+        <button class="add-to-cart-btn" data-id="${product.id}">Add to Cart</button>
+      </div>
+      <div class="product-info">
+        <div class="product-category">${product.category}</div>
+        <h3 class="product-title">${product.title}</h3>
+        <div class="product-price">$${product.price.toFixed(2)}</div>
+      </div>
+    `;
+    track.appendChild(card);
+  });
+  
+  attachAddToCartListeners();
+  setupCarouselLogic();
+}
+
+function attachAddToCartListeners() {
   document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
+    btn.onclick = (e) => {
       const id = parseInt(e.target.getAttribute('data-id'));
       addToCart(id);
-    });
+    };
   });
+}
+
+function setupCarouselLogic() {
+  const track = document.getElementById('carousel-track');
+  const prevBtn = document.getElementById('carousel-prev');
+  const nextBtn = document.getElementById('carousel-next');
+  let currentScroll = 0;
+
+  if(prevBtn && nextBtn) {
+    nextBtn.onclick = () => {
+      const cardWidth = track.querySelector('.carousel-card').offsetWidth;
+      currentScroll += cardWidth + 30; // 30 is gap
+      track.scrollTo({ left: currentScroll, behavior: 'smooth' });
+    };
+    prevBtn.onclick = () => {
+      const cardWidth = track.querySelector('.carousel-card').offsetWidth;
+      currentScroll -= cardWidth + 30;
+      if (currentScroll < 0) currentScroll = 0;
+      track.scrollTo({ left: currentScroll, behavior: 'smooth' });
+    };
+  }
 }
 
 function showStep(stepEl, title) {
@@ -181,6 +246,11 @@ function addToCart(productId) {
   setTimeout(() => cartBtn.style.transform = 'scale(1)', 200);
 
   showNotification(`${product.title} added to cart`);
+  
+  // Auto-open cart
+  showStep(step1, 'Your Cart');
+  cartSidebar.classList.add('open');
+  cartOverlay.classList.add('open');
 }
 
 function showNotification(message) {

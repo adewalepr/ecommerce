@@ -1,144 +1,202 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <title>Lumière | Modern E-Commerce</title>
-  </head>
-  <body>
-    <!-- Navbar -->
-    <header class="header">
-      <a href="/" class="logo">Lumière</a>
-      <nav class="nav">
-        <a href="#home">Home</a>
-        <a href="#collections">Collections</a>
-        <a href="/login.html">Sign In</a>
-      </nav>
-      <div class="header-actions">
-        <button class="icon-btn" id="theme-toggle" title="Toggle Light/Dark Theme">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="theme-icon"></svg>
-        </button>
-        <button class="icon-btn" id="cart-btn">
-          Cart (<span id="cart-count">0</span>)
-        </button>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Authentication | Lumière</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/style.css">
+  <style>
+    /* Scoped Auth Styles */
+    body { overflow: hidden; }
+    .auth-container {
+      display: flex;
+      height: 100vh;
+      width: 100vw;
+    }
+    .auth-image {
+      flex: 1;
+      position: relative;
+      background: url('/images/hero_fashion_1776297697230.png') center/cover no-repeat;
+      display: flex;
+      align-items: flex-end;
+      padding: 4rem;
+    }
+    .auth-image::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+    }
+    .auth-quote {
+      position: relative;
+      z-index: 1;
+      color: white;
+    }
+    .auth-quote h2 { font-size: 3rem; font-weight: 300; margin-bottom: 1rem; }
+    .auth-form-area {
+      flex: 1;
+      background: var(--bg-color);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 10%;
+      position: relative;
+    }
+    .back-home {
+      position: absolute;
+      top: 2rem;
+      right: 2rem;
+      text-decoration: none;
+      color: var(--text-main);
+      font-weight: 600;
+      opacity: 0.7;
+      transition: var(--transition);
+    }
+    .back-home:hover { opacity: 1; }
+    
+    .form-wrapper {
+      max-width: 400px;
+      width: 100%;
+      margin: 0 auto;
+    }
+    .form-header { margin-bottom: 2.5rem; }
+    .form-header h1 { font-size: 2.5rem; margin-bottom: 0.5rem; color: var(--text-main); }
+    .form-header p { color: var(--text-muted); }
+    
+    .input-group {
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+    .input-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--text-main);
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+    .input-group input {
+      width: 100%;
+      padding: 1rem 1.2rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      border-radius: 8px;
+      outline: none;
+      transition: var(--transition);
+      font-size: 1rem;
+    }
+    .input-group input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(229, 169, 60, 0.1);
+    }
+    .auth-btn {
+      width: 100%;
+      padding: 1rem;
+      background: var(--text-main);
+      color: var(--bg-color);
+      border: none;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 1rem;
+      transition: var(--transition);
+    }
+    .auth-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+    
+    .form-toggle {
+      margin-top: 2rem;
+      text-align: center;
+      color: var(--text-muted);
+    }
+    .form-toggle a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    
+    /* Toggle animations */
+    .view-section { display: none; animation: slideIn 0.4s ease forwards; }
+    .view-section.active { display: block; }
+    
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    @media (max-width: 768px) {
+      .auth-image { display: none; }
+      .auth-form-area { padding: 5%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="auth-container">
+    <div class="auth-image">
+      <div class="auth-quote">
+        <h2>"Elegance is an attitude."</h2>
+        <p>— Join our exclusive community.</p>
       </div>
-    </header>
-
-    <main>
-      <!-- Hero Section -->
-      <section class="hero reveal" id="home">
-        <div class="hero-bg"></div>
-        <div class="hero-overlay"></div>
-        <div class="hero-content">
-          <h1>Effortless Elegance.</h1>
-          <p>Discover our curated collection of luxury apparel, premium bags, and modern footwear.</p>
-          <button class="btn-primary" onclick="document.getElementById('collections').scrollIntoView({behavior: 'smooth'})">Shop Collection</button>
-        </div>
-      </section>
-
-      <!-- Category Filter -->
-      <section class="categories reveal" id="collections">
-        <button class="category-btn active" data-category="all">All</button>
-        <button class="category-btn" data-category="clothes">Clothes</button>
-        <button class="category-btn" data-category="bags">Bags</button>
-        <button class="category-btn" data-category="shoes">Shoes</button>
-      </section>
-
-      <!-- Products Grid -->
-      <section class="products-section reveal">
-        <div class="products-grid" id="products-grid">
-           <!-- Dynamic Content from JS -->
-        </div>
-      </section>
-    </main>
-
-    <footer class="footer reveal">
-      <div class="footer-logo">Lumière</div>
-      <p>&copy; 2026 Lumière E-Commerce. Developed for Elegance.</p>
-    </footer>
-
-    <!-- Checkout Modal / Sidebar -->
-    <div class="cart-overlay" id="cart-overlay"></div>
-    <div class="cart-sidebar" id="cart-sidebar">
-      <div class="cart-header">
-        <h2 id="checkout-title">Your Cart</h2>
-        <button id="close-cart">&times;</button>
-      </div>
-      <div class="cart-body">
+    </div>
+    <div class="auth-form-area">
+      <a href="/store.html" class="back-home">&larr; Back to Store</a>
+      <div class="form-wrapper">
         
-        <!-- Step 1: Cart Items -->
-        <div class="checkout-step active" id="step-1">
-          <div class="cart-items" id="cart-items">
-            <!-- Dynamic items -->
+        <!-- Login Form -->
+        <div id="login-view" class="view-section active">
+          <div class="form-header">
+            <h1>Welcome Back</h1>
+            <p>Enter your details to access your account.</p>
           </div>
-          <div class="cart-footer">
-            <div class="cart-total"><span>Total:</span> $<span id="cart-total-price">0.00</span></div>
-            <button class="btn-primary checkout-btn" id="go-to-shipping">Proceed to Checkout</button>
-          </div>
-        </div>
-
-        <!-- Step 2: Shipping Info -->
-        <div class="checkout-step" id="step-2">
-          <div class="form-group">
-            <label>Full Name</label>
-            <input type="text" placeholder="Jane Doe" required>
-          </div>
-          <div class="form-group">
-            <label>Email Address</label>
-            <input type="email" placeholder="jane@example.com" required>
-          </div>
-          <div class="form-group">
-            <label>Shipping Address</label>
-            <input type="text" placeholder="123 Luxury Ave, NY" required>
-          </div>
-          <div class="cart-footer">
-            <button class="btn-primary checkout-btn" id="go-to-payment" style="margin-bottom: 10px;">Continue to Payment</button>
-            <button class="btn-primary checkout-btn" style="background:transparent; color:var(--text-main); border:1px solid var(--border);" id="back-to-cart">Back to Cart</button>
-          </div>
-        </div>
-
-        <!-- Step 3: Payment Info -->
-        <div class="checkout-step" id="step-3">
-          <div class="form-group">
-            <label>Cardholder Name</label>
-            <input type="text" placeholder="Jane Doe" required>
-          </div>
-          <div class="form-group">
-            <label>Card Number</label>
-            <input type="text" placeholder="0000 0000 0000 0000" required>
-          </div>
-          <div class="flex-row">
-            <div class="form-group">
-              <label>Expiry Date</label>
-              <input type="text" placeholder="MM/YY" required>
+          <form onsubmit="event.preventDefault(); window.location.href='/store.html'">
+            <div class="input-group">
+              <label>Email Address</label>
+              <input type="email" placeholder="hello@example.com" required>
             </div>
-            <div class="form-group">
-              <label>CVC</label>
-              <input type="password" placeholder="123" required>
+            <div class="input-group">
+              <label>Password</label>
+              <input type="password" placeholder="••••••••" required>
             </div>
-          </div>
-          <div class="cart-footer">
-            <button class="btn-primary checkout-btn" id="confirm-order" style="margin-bottom: 10px;">Place Order</button>
-            <button class="btn-primary checkout-btn" style="background:transparent; color:var(--text-main); border:1px solid var(--border);" id="back-to-shipping">Back to Shipping</button>
+            <button type="submit" class="auth-btn">Sign In</button>
+          </form>
+          <div class="form-toggle">
+            Don't have an account? <a id="go-to-signup" href="javascript:void(0);">Sign up</a>
           </div>
         </div>
 
-        <!-- Step 4: Success -->
-        <div class="checkout-step" id="step-4">
-          <div class="success-icon">✓</div>
-          <div class="success-msg">Order Confirmed!</div>
-          <div class="success-sub">Thank you for your elegant choice.</div>
-          <button class="btn-primary checkout-btn" id="close-success">Continue Shopping</button>
+        <!-- Signup Form -->
+        <div id="signup-view" class="view-section">
+          <div class="form-header">
+            <h1>Create Account</h1>
+            <p>Join Lumière for exclusive drops.</p>
+          </div>
+          <form onsubmit="event.preventDefault(); window.location.href='/store.html'">
+            <div class="input-group">
+              <label>Full Name</label>
+              <input type="text" placeholder="Jane Doe" required>
+            </div>
+            <div class="input-group">
+              <label>Email Address</label>
+              <input type="email" placeholder="hello@example.com" required>
+            </div>
+            <div class="input-group">
+              <label>Password</label>
+              <input type="password" placeholder="••••••••" required>
+            </div>
+            <button type="submit" class="auth-btn">Create Account</button>
+          </form>
+          <div class="form-toggle">
+            Already have an account? <a id="go-to-login" href="javascript:void(0);">Sign in</a>
+          </div>
         </div>
 
       </div>
     </div>
-
-    <script type="module" src="/src/main.js"></script>
-    <link rel="stylesheet" href="/src/style.css">
-  </body>
+  </div>
+  <script type="module" src="/src/login.js"></script>
+</body>
 </html>
