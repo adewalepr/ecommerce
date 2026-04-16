@@ -179,6 +179,29 @@ function addToCart(productId) {
   
   cartBtn.style.transform = 'scale(1.1)';
   setTimeout(() => cartBtn.style.transform = 'scale(1)', 200);
+
+  showNotification(`${product.title} added to cart`);
+}
+
+function showNotification(message) {
+  let container = document.getElementById('toast-container');
+  if (!container) {
+    container = document.createElement('div');
+    container.id = 'toast-container';
+    container.className = 'toast-container';
+    document.body.appendChild(container);
+  }
+  
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.innerHTML = `<span class="toast-icon">✓</span> <span>${message}</span>`;
+  
+  container.appendChild(toast);
+  
+  setTimeout(() => {
+    toast.classList.add('fade-out');
+    setTimeout(() => toast.remove(), 400);
+  }, 3000);
 }
 
 function removeFromCart(productId) {
